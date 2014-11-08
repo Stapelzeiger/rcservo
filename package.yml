@@ -3,3 +3,7 @@ source:
 
 tests:
     - rcservo_test.cpp
+
+depends:
+    - cmp:
+        url: https://github.com/camgunz/cmp
