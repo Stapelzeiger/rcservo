@@ -1,4 +1,5 @@
 #include "CppUTest/TestHarness.h"
+#include <math.h>
 #include "rcservo.h"
 
 
@@ -203,5 +204,23 @@ TEST(RCServoCustomSetTest, SetLimitMax)
 TEST(RCServoCustomSetTest, SetLimitMin)
 {
     rcservo_set(&s, -10);
+    DOUBLES_EQUAL(10000, s.pos, 1);
+}
+
+TEST(RCServoCustomSetTest, SetNan)
+{
+    rcservo_set(&s, NAN);
+    DOUBLES_EQUAL(13000, s.pos, 1);
+}
+
+TEST(RCServoCustomSetTest, SetInf)
+{
+    rcservo_set(&s, INFINITY);
+    DOUBLES_EQUAL(20000, s.pos, 1);
+}
+
+TEST(RCServoCustomSetTest, SetNegInf)
+{
+    rcservo_set(&s, -INFINITY);
     DOUBLES_EQUAL(10000, s.pos, 1);
 }

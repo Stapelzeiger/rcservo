@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include <math.h>
 #include "cmp/cmp.h"
 #include "rcservo.h"
 
@@ -86,6 +87,9 @@ void *rcservo_save_calibration(const rcservo_t *s, void *calib)
 void rcservo_set(rcservo_t *s, float pos)
 {
     float pulse = s->calib.zero;
+    if (isnan(pos)) {
+        pos = 0;
+    }
     if (pos > 0) {
         pulse += pos * s->calib.gain_pos;
     } else {
