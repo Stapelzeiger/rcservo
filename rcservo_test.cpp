@@ -3,7 +3,7 @@
 #include "rcservo.h"
 
 
-static const char defaultcofing[] = {0x96, 0xcd, 0x13, 0x88, 0xcd, 0x13, 0x88, 0xcd, 0x3a, 0x98, 0xcd, 0x23, 0x28, 0xcd, 0x52, 0x08, 0xcc, 0xc8};
+static const char defaultcofing[] = "\x96\xcd\x13\x88\xcd\x13\x88\xcd\x3a\x98\xcd\x23\x28\xcd\x52\x08\xcc\xc8";
 
 TEST_GROUP(RCServoTest)
 {
@@ -58,7 +58,7 @@ TEST(RCServoTest, Disable)
 TEST(RCServoTest, Load)
 {
     init_zero(&s);
-    POINTERS_EQUAL(&defaultcofing[sizeof(defaultcofing)], rcservo_load_calibration(&s, defaultcofing));
+    POINTERS_EQUAL(&defaultcofing[strlen(defaultcofing)], rcservo_load_calibration(&s, defaultcofing));
     CHECK_EQUAL(5000, s.calib.gain_pos);
     CHECK_EQUAL(5000, s.calib.gain_neg);
     CHECK_EQUAL(15000, s.calib.zero);
@@ -69,21 +69,21 @@ TEST(RCServoTest, Load)
 
 TEST(RCServoTest, LoadErrorType)
 {
-    static char errorconfig[] = {0x96, 0xcd, 0x13, 0x88, 0xcd, 0x13, 0x88, 0xcd, 0x3a, 0x98, 0x09, 0xcd, 0x52, 0x08, 0xcc, 0xc8};
+    static char errorconfig[] = "\x96\xcd\x13\x88\xcd\x13\x88\xcd\x3a\x98\x09\xcd\x52\x08\xcc\xc8";
     POINTERS_EQUAL(NULL, rcservo_load_calibration(&s, errorconfig));
 }
 
 TEST(RCServoTest, LoadErrorArrayLen)
 {
-    static char errorconfig[] = {0x95, 0xcd, 0x13, 0x88, 0xcd, 0x13, 0x88, 0xcd, 0x3a, 0x98, 0xcd, 0x23, 0x28, 0xcd, 0x52, 0x08, 0xcc, 0xc8};
+    static char errorconfig[] = "\x95\xcd\x13\x88\xcd\x13\x88\xcd\x3a\x98\xcd\x23\x28\xcd\x52\x08\xcc\xc8";
     POINTERS_EQUAL(NULL, rcservo_load_calibration(&s, errorconfig));
 }
 
 TEST(RCServoTest, Store)
 {
     char buf[RC_SERVO_CALIBRATION_BUFFER_SIZE];
-    POINTERS_EQUAL(&buf[sizeof(defaultcofing)], rcservo_save_calibration(&s, buf));
-    CHECK(memcmp(buf, defaultcofing, sizeof(defaultcofing)) == 0);
+    POINTERS_EQUAL(&buf[strlen(defaultcofing)], rcservo_save_calibration(&s, buf));
+    CHECK(memcmp(buf, defaultcofing, strlen(defaultcofing)) == 0);
 }
 
 TEST(RCServoTest, SetRaw)
